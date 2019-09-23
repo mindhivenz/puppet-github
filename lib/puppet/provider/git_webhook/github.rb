@@ -148,6 +148,8 @@ Puppet::Type.type(:git_webhook).provide(:github) do
         end
       end
 
+      config_opts['secret'] = resource[:secret].strip unless resource[:secret].nil?
+
       response = api_call('POST', url, { 'name' => 'web', 'active' => true, 'config' => config_opts })
 
       if response.class == Net::HTTPCreated
