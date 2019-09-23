@@ -20,6 +20,7 @@ describe type_class do
       :issue_events,
       :disable_ssl_verify,
       :server_url,
+      :secret,
     ]
   end
 

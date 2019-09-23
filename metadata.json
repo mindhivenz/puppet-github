@@ -1,12 +1,12 @@
 {
-  "name": "abrader-gms",
-  "version": "1.0.3",
-  "author": "Andrew Brader",
+  "name": "puppet-github",
+  "version": "1.0.0",
+  "author": "Andrew Brader & Damon Maria",
   "summary": "Git Management Systems API Types & Providers",
   "license": "Apache-2.0",
-  "source": "https://github.com/abrader/abrader-gms",
-  "project_page": "https://github.com/abrader/abrader-gms",
-  "issues_url": "https://github.com/abrader/abrader-gms/issues",
+  "source": "https://github.com/mindhivenz/puppet-github",
+  "project_page": "https://github.com/mindhivenz/puppet-github",
+  "issues_url": "https://github.com/mindhivenz/puppet-github/issues",
   "tags": ["git", "github", "gitlab", "stash", "gms"],
   "operatingsystem_support": [
      {
@@ -61,7 +61,9 @@
        "operatingsystemrelease": [
          "10.04",
          "12.04",
-         "14.04"
+         "14.04",
+         "16.04",
+         "18.04"
        ]
      },
      {
@@ -86,13 +88,13 @@
        },
        {
          "name": "puppet",
-         "version_requirement": ">= 3.4.3 < 5.0.0"
+         "version_requirement": ">= 3.4.3 < 7.0.0"
        }
      ],
    "dependencies": [
      {
        "name": "puppetlabs/stdlib",
-       "version_requirement": ">=3.2.0 <5.0.0"
+       "version_requirement": ">=3.2.0 <7.0.0"
      }
    ]
 }

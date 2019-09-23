@@ -1,11 +1,8 @@
-[![Puppet
-Forge](http://img.shields.io/puppetforge/v/abrader/gms.svg)](https://forge.puppetlabs.com/abrader/gms)
-[![Build
-Status](https://travis-ci.org/abrader/abrader-gms.svg?branch=master)](https://travis-ci.org/abrader/abrader-gms)
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/abrader/abrader-gms?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-[![Puppet Forge Downloads](http://img.shields.io/puppetforge/dt/abrader/gms.svg)](https://forge.puppetlabs.com/abrader/gms)
 
 # Git Management Systems API Types & Providers
+
+A fork of [abrader-gms](https://github.com/abrader/abrader-gms) providing:
+- Secrets with Github
 
 As of right now this repository only covers the following GMS functionality:
 
@@ -173,7 +170,7 @@ git_deploy_key { 'add_deploy_key_to_puppet_control':
   token        => hiera('gitlab_api_token'),
   project_name => 'puppet/control',
   server_url   => 'http://your.internal.github.server.com',
-  provider     => 'github',
+  provider     => 'github', 
 }
 ```
 
@@ -338,6 +335,15 @@ disable_ssl_verify => true,
 
 The gitlab provider sets `enable_ssl_verification` to false when this attribute is used
 
+### GitHub optional Parameters
+
+#### secret
+The secret to set for the webhook. **NOTE: GitHub only**
+
+```puppet
+secret => 'kl34lkhsdfhiucy4tih,sdjkbhil34',
+```
+
 ### GitLab optional Parameters
 
 #### merge\_request\_events
@@ -372,6 +378,7 @@ git_webhook { 'web_post_receive_webhook' :
   server_url         => 'http://your.internal.github.server.com',
   disable_ssl_verify => true,
   provider           => 'github',
+  secret             => 's8dofhg7cbyyiuh437cy7wic7y',
 }
 ```
 

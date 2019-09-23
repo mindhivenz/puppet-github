@@ -129,6 +129,7 @@ Puppet::Type.type(:gms_webhook).provide(:github, :parent => PuppetX::Puppetlabs:
       :'content_type'       => :content_type,
       :'insecure_ssl'       => :insecure_ssl,
       :'webhook_url'        => :url,
+      :'secret'             => :secret,
     }
 
     message = nest_hash_keys(config_map, :config, message)

@@ -51,5 +51,15 @@ module PuppetX::GMS::Type
         end
       end
     end
+
+    def add_parameter_secret
+      newparam(:secret) do
+        desc 'The secret used to calculate a signature on webhook requests.'
+        munge do |value|
+          String(value)
+        end
+      end
+    end
+
   end
 end

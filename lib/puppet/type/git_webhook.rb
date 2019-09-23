@@ -30,6 +30,7 @@ module Puppet
     add_parameter_token_file
     add_parameter_username
     add_parameter_password
+    add_parameter_secret
 
     newparam(:project_id) do
       desc 'The project ID associated with the project.'
