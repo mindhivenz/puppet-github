@@ -30,7 +30,6 @@ module Puppet
     add_parameter_token_file
     add_parameter_username
     add_parameter_password
-    add_parameter_secret
 
     newparam(:project_id) do
       desc 'The project ID associated with the project.'
@@ -98,6 +97,13 @@ module Puppet
         unless value =~ /^(https?:\/\/).*:?.*\/?$/
           raise(Puppet::Error, "Git server URL must be fully qualified, not '#{value}'")
         end
+      end
+    end
+
+    newparam(:secret) do
+      desc 'The secret used to calculate a signature on webhook requests.'
+      munge do |value|
+        String(value)
       end
     end
 
