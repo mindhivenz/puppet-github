@@ -1,7 +1,7 @@
 {
-  "name": "puppet-github",
+  "name": "mindhive-github",
   "version": "1.0.0",
-  "author": "Andrew Brader & Damon Maria",
+  "author": "Andrew Brader & damon@mindhive.co.nz",
   "summary": "Git Management Systems API Types & Providers",
   "license": "Apache-2.0",
   "source": "https://github.com/mindhivenz/puppet-github",
