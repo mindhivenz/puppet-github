@@ -1,6 +1,6 @@
 {
   "name": "mindhive-github",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "author": "Andrew Brader & damon@mindhive.co.nz",
   "summary": "Git Management Systems API Types & Providers",
   "license": "Apache-2.0",
@@ -10,7 +10,7 @@
   "dependencies": [
     {
       "name": "puppetlabs/stdlib",
-      "version_requirement": ">=3.2.0 <7.0.0"
+      "version_requirement": ">=4.24.0 <8.0.0"
     }
   ],
   "operatingsystem_support": [
