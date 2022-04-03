@@ -1,6 +1,6 @@
 {
   "name": "mindhive-github",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "author": "Andrew Brader & damon@mindhive.co.nz",
   "summary": "Git Management Systems API Types & Providers",
   "license": "Apache-2.0",
