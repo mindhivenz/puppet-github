@@ -1,3 +1,30 @@
+## 2026-10-12 - Release 2.0.0
+### Summary
+
+Breaking: only the `git_webhook` type and its `github` provider remain. Moved from PDK to jig, with VoxBox CI.
+
+#### Removed
+- Types `git_deploy_key`, `git_groupteam`, `git_groupteam_member` and `gms_webhook`
+- The `gitlab` and `stash` providers for `git_webhook`
+- `git_webhook` parameters that only those providers used: `username`, `password`, `project_id`, `repo_name`, `hook_exe`, `hook_exe_params`, `merge_request_events`, `tag_push_events` and `issue_events`
+- The `puppetlabs/stdlib` dependency, which no code used
+- Support for Puppet older than 7 and for operating systems other than Ubuntu 20.04, 22.04 and 24.04
+
+#### Fixes
+- The provider verifies the GitHub API certificate. It previously skipped verification on every request that carried the token
+- A GitHub error response now fails with the status and GitHub's message, instead of a TypeError
+- `project_name`, `webhook_url` and `token` are stripped of surrounding whitespace everywhere they are used
+- A resource missing `webhook_url`, `project_name` or a token now fails validation, instead of crashing the provider
+- `webhook_url` must be an http or https URL and `project_name` must be `owner/repo`, so a bad value fails validation instead of at GitHub
+- A trailing `/` on `server_url` is dropped, instead of building `//repos/...`
+- A repository with more than 30 hooks no longer reports the webhook absent and then fails to create it
+- An unreadable `token_file` fails with a Puppet error naming it, instead of a raw Errno
+- `disable_ssl_verify` really defaults to `false`. Its previous default was ignored, though unset behaved the same
+- `ensure => absent` looks up the repository hooks once instead of twice, and `token_file` is read once per run
+- The API User-Agent is `puppet-github`, not `puppet-gms`
+
+- - -
+
 ## 2016-06-07 - Release 1.0.3
 ### Summary
 

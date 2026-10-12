@@ -1,116 +1,69 @@
+# frozen_string_literal: true
+
 require 'puppet/parameter/boolean'
-require 'puppet_x/gms/type'
 
-module Puppet
-  Puppet::Type.newtype(:git_webhook) do
-    include PuppetX::GMS::Type
+Puppet::Type.newtype(:git_webhook) do
+  @doc = 'Manages a webhook on a GitHub repository.'
 
-    @doc = %q{TODO
-    }
+  ensurable do
+    defaultvalues
+    defaultto :present
+  end
 
-    ensurable do
-      defaultvalues
-      defaultto :present
+  newparam(:name, namevar: true) do
+    desc 'A unique title for the webhook.'
+  end
+
+  newparam(:webhook_url) do
+    desc 'The URL GitHub calls when the repository changes. It may carry basic auth credentials.'
+    munge { |value| String(value).strip }
+    validate do |value|
+      raise Puppet::Error, "Git webhook URL must be fully qualified, not '#{value}'" unless String(value).strip.match?(%r{\Ahttps?://\S+\z})
     end
+  end
 
-    newparam(:name, :namevar => true) do
-      desc 'A unique title for the key that will be provided to the prefered Git management system. Required.'
+  newparam(:project_name) do
+    desc "The repository, as 'owner/repo'."
+    munge { |value| String(value).strip }
+    validate do |value|
+      raise Puppet::Error, "Git project name must be owner/repo, not '#{value}'" unless String(value).strip.match?(%r{\A[^/\s]+/[^/\s]+\z})
     end
+  end
 
-    newparam(:webhook_url) do
-      desc 'The URL the webhook will trigger upon a commit to the respective respository. Required. NOTE: GitHub & GitLab only.'
-      validate do |value|
-        unless value =~ /^(https?:\/\/)?(\S*\:\S*\@)?(\S*)\.?(\S*)\.?(\w*):?(\d*)\/?(\S*)$/
-          raise(Puppet::Error, "Git webhook URL must be fully qualified, not '#{value}'")
-        end
-      end
+  newparam(:token) do
+    desc 'The GitHub API token. Mutually exclusive with token_file.'
+    munge { |value| String(value).strip }
+  end
+
+  newparam(:token_file) do
+    desc 'The path to a file on the agent holding the GitHub API token. Mutually exclusive with token.'
+    munge { |value| String(value) }
+  end
+
+  newparam(:secret) do
+    desc 'The secret GitHub uses to sign webhook payloads.'
+    munge { |value| String(value).strip }
+  end
+
+  newparam(:disable_ssl_verify, boolean: true, parent: Puppet::Parameter::Boolean) do
+    desc 'Whether GitHub skips certificate verification when calling webhook_url, for a self-signed endpoint.'
+    defaultto :false
+  end
+
+  newparam(:server_url) do
+    desc 'The GitHub API base URL. Set it for GitHub Enterprise.'
+    defaultto 'https://api.github.com'
+    munge { |value| String(value).strip.sub(%r{/+\z}, '') }
+    validate do |value|
+      raise Puppet::Error, "Git server URL must be fully qualified, not '#{value}'" unless String(value).match?(%r{\Ahttps?://})
     end
+  end
 
-    add_parameter_token
-    add_parameter_token_file
-    add_parameter_username
-    add_parameter_password
-
-    newparam(:project_id) do
-      desc 'The project ID associated with the project.'
-      munge do |value|
-        Integer(value)
-      end
+  validate do
+    %i[webhook_url project_name].each do |attribute|
+      raise Puppet::Error, "#{attribute} is required" if self[attribute].nil?
     end
-
-    newparam(:project_name) do
-      desc 'The project name associated with the project. Required.'
-      munge do |value|
-        String(value)
-      end
-    end
-
-    newparam(:repo_name) do
-      desc 'The name of the repository associated with the webhook. Required. NOTE: Stash only.'
-      munge do |value|
-        String(value)
-      end
-    end
-
-    newparam(:hook_exe) do
-      desc 'The absolute path to the exectuable triggered when a commit has been made to the respository. Required. NOTE: Stash only.'
-      munge do |value|
-        String(value)
-      end
-    end
-
-    newparam(:hook_exe_params) do
-      desc 'The parameters to be passed along side of the executable that will be triggered when a commit has been made to the repository. Optional. NOTE: Stash only.'
-      munge do |value|
-        String(value)
-      end
-    end
-
-    newparam(:merge_request_events, :boolean => true, :parent => Puppet::Parameter::Boolean) do
-      desc 'The URL in the webhook_url parameter will be triggered when a merge request is created. Optional. NOTE: GitLab only'
-
-      defaultto false
-    end
-
-    newparam(:tag_push_events, :boolean => true, :parent => Puppet::Parameter::Boolean) do
-      desc 'The URL in the webhook_url parameter will be triggered when a tag push event occurs. Optional. NOTE: GitLab only'
-
-      defaultto false
-    end
-
-    newparam(:issue_events, :boolean => true, :parent => Puppet::Parameter::Boolean) do
-      desc 'The URL in the webhook_url parameter will be triggered when an issue event occurs. Optional. NOTE: GitLab only.'
-
-      defaultto false
-    end
-
-    newparam(:disable_ssl_verify, :boolean => true, :parent => Puppet::Parameter::Boolean) do
-      desc 'Boolean value for disabling SSL verification for this webhook. Optional. NOTE: GitHub only'
-
-      defaultto false
-    end
-
-    newparam(:server_url) do
-      desc 'The URL path to the Git management system server. Required.'
-      validate do |value|
-        #unless value =~ /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/
-        unless value =~ /^(https?:\/\/).*:?.*\/?$/
-          raise(Puppet::Error, "Git server URL must be fully qualified, not '#{value}'")
-        end
-      end
-    end
-
-    newparam(:secret) do
-      desc 'The secret used to calculate a signature on webhook requests.'
-      munge do |value|
-        String(value)
-      end
-    end
-
-    validate do
-      validate_token_or_token_file
-    end
-
+    raise Puppet::Error, 'token and token_file are mutually exclusive' if self[:token] && self[:token_file]
+    raise Puppet::Error, 'One of token or token_file is required' unless self[:token] || self[:token_file]
   end
 end
-
